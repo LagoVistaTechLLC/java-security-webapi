@@ -93,6 +93,12 @@ CREATE TABLE "Actions" (
 	"Display Name" VARCHAR(255) UNIQUE NOT NULL,
 	"Abbreviation" VARCHAR(3) UNIQUE NOT NULL
 );
+INSERT INTO "Actions" ("GUID", "Version", "Display Name", "Abbreviation")
+VALUES 
+	('b1f9efe539ec460e94d1880295799b3f', 1, 'Create', 'C'),
+	('2681aeff2e4d4943a20748abd784a67e', 1, 'Read', 'R'),
+	('4cfaa8968bb24248afada78368d96fc0', 1, 'Update', 'U'),
+	('1027f346e1074d8fbc4174520c51b7b5', 1, 'Delete', 'D');
 
 CREATE TABLE "Securable Actions" (
 	"GUID" UUID PRIMARY KEY,
