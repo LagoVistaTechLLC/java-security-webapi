@@ -68,7 +68,7 @@ class SessionTest {
 				
 				Session session = SessionFactory.instance.create();
 				session.login(connection, "administrator", "Welcome123");
-				fail("No exception thrown for invalid login!");
+				fail("No exception thrown for expired password!");
 			}
 			catch(PasswordExpiredException ex) {
 				assertTrue(true);
@@ -79,31 +79,50 @@ class SessionTest {
 	@Test
 	void IsAllowed_AdministratorUser() throws Exception {
 		TestDatabase.runTest(connection -> {
+			Securable securable = TableFactory.instanciate(SecurableFactory.instance).createRow();
+			securable.setDisabled(false);
+			securable.setDisplayName("Test Securable");
+			connection.save(securable.getTable());
+			securable = SecurableFactory.instance.loadByDisplayName(connection, "Test Securable");
+			
+			Session session = SessionFactory.instance.create();
+			session.login(connection, "administrator", "Welcome123");
+			assertTrue(session.isAllowed(securable.getGuid(), Action.READ_GUID));
+		});
+	}
+	@Test
+	void IsAllowed_AdministratorGroup() throws Exception {
+		TestDatabase.runTest(connection -> {
 			try {
+				User user = TableFactory.instanciate(UserFactory.instance).createRow();
+				user.setDisplayName("Test User");
+				user.setDisabled(false);
+				user.setEmailAddress("test@localhost");
+				((User) user).setUserName("test");
+				connection.save(user.getTable());
+				
+				Session session = SessionFactory.instance.create();
+				session.login(connection, "administrator", "Welcome123");
+
+				user = UserFactory.instance.loadByUserName(connection, "test");
+				user.resetPassword(session, "Welcome123", "Welcome123");
+				
 				Securable securable = TableFactory.instanciate(SecurableFactory.instance).createRow();
 				securable.setDisabled(false);
 				securable.setDisplayName("Test Securable");
 				connection.save(securable.getTable());
 				securable = SecurableFactory.instance.loadByDisplayName(connection, "Test Securable");
-				
-				Action action = TableFactory.instanciate(ActionFactory.instance).createRow();
-				action.setDisplayName("Read");
-				action.setAbbreviation("R");
-				connection.save(action.getTable());
-				action = ActionFactory.instance.loadByDisplayName(connection, "Read");
 
-				Session session = SessionFactory.instance.create();
-				session.login(connection, "administrator", "Welcome123");
-				assertTrue(session.isAllowed(securable.getGuid(), action.getGuid()));
+				session = SessionFactory.instance.create();
+				session.login(connection, "test", "Welcome123");
+				
+				assertTrue(false);
+				//assertTrue(session.isAllowed(securable.getGuid(), Action.READ_GUID));
 			}
 			catch(PasswordExpiredException ex) {
-				assertTrue(true);
+				assertTrue(false);
 			}			
 		});
-	}
-	@Test
-	void IsAllowed_AdministratorGroup() {
-		assertTrue(false);
 	}
 	@Test
 	void IsAllowed_EveryoneAllowed() {
