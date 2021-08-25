@@ -7,10 +7,10 @@ CREATE TABLE "Users" (
 	"Email Address" VARCHAR(256) NOT NULL,
 	"Mobile Phone" VARCHAR(16),
 	
-	"Password Date" DATE NOT NULL,
-	"Password Salt" BYTEA NOT NULL,
-	"Password Hash" BYTEA NOT NULL,
-	"Password Iterations" INT NOT NULL,
+	"Password Date" DATE,
+	"Password Salt" BYTEA,
+	"Password Hash" BYTEA,
+	"Password Iterations" INT,
 	
 	"Disabled" BOOLEAN NOT NULL
 );
@@ -25,9 +25,9 @@ INSERT INTO "Users" (
 ) VALUES (
 	'07e938003af84c6a99015528dc8ecdf0', 1,
 	'System Administrator', 'administrator', 'administrator@localhost', NULL,
-	CURRENT_DATE, 1000000,
-	DECODE('15870178a49ec45b42a46f5c94154d8ccad4810ae0c7a1565e848f2a07c4004e', 'HEX'),
-	DECODE('df3ef5f3c7807080857ebe1ee1aa45bffaaf39bd32c4c0b6c9314555c4d5bca898e7b2c1f70c3211351a0729021f35b3b9c26444ce1bd9d192b5cdf664fda4e0', 'HEX'),
+	CURRENT_DATE, 10000,
+	DECODE('640ef99aa80844eaaeeae7b35ead3d221b9c6e1eea0df7339739369b93450ddd', 'HEX'),
+	DECODE('4cfbc5fb150865ee4a5a109ce29e868253d31aa6613cccc774bbc5ad1c0b3893b151a59eb0ea02890e59a2c73249b6d2a5c3197c8cdaf3244ee0d417e80c8a45', 'HEX'),
 	FALSE
 );
 

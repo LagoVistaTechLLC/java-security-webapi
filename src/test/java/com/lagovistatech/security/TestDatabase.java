@@ -11,8 +11,7 @@ import com.lagovistatech.database.ConnectionFactory;
 import com.lagovistatech.security.webapi.entities.Session;
 
 public class TestDatabase {	
-	public interface testFunction {
-		void run(Connection connection) throws Exception;
+	public interface testFunction { void run(Connection connection) throws Exception;
 	}
 	
 	public static void runTest(testFunction test) throws Exception {

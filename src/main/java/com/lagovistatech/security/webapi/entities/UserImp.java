@@ -14,7 +14,7 @@ import com.lagovistatech.security.webapi.generated.UserRowImp;
 
 public class UserImp extends UserRowImp implements User {
 	private static final int SALT_LENGTH = 32;
-	private static final int ITERATIONS = 1000000;
+	private static final int ITERATIONS = 10000;
 	private static final int KEY_LENGTH = 512;
 	
 	protected UserImp(HashMap<String, Object> values) {

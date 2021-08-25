@@ -10,7 +10,7 @@ import com.lagovistatech.security.webapi.entities.PasswordHasher;
 class PasswordHasherTest {
 	@Test
 	void Repeatable_Hash() throws Exception {
-		int iterations = 1000000;
+		int iterations = 10000;
 		
 		PasswordHasher firstPh = new PasswordHasher(32, iterations, 512);
 		byte[] firstKey = firstPh.calculate("Welcome123");

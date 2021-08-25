@@ -8,8 +8,10 @@ import org.junit.jupiter.api.Test;
 
 import com.lagovistatech.database.TableFactory;
 import com.lagovistatech.security.webapi.entities.Action;
-import com.lagovistatech.security.webapi.entities.ActionFactory;
+import com.lagovistatech.security.webapi.entities.Group;
 import com.lagovistatech.security.webapi.entities.InvalidLoginException;
+import com.lagovistatech.security.webapi.entities.Membership;
+import com.lagovistatech.security.webapi.entities.MembershipFactory;
 import com.lagovistatech.security.webapi.entities.PasswordExpiredException;
 import com.lagovistatech.security.webapi.entities.Securable;
 import com.lagovistatech.security.webapi.entities.SecurableFactory;
@@ -75,7 +77,38 @@ class SessionTest {
 			}			
 		});
 	}
-	
+	@Test
+	void Login_Disabled() throws Exception {
+		TestDatabase.runTest(connection -> {
+			try {
+				User user = TableFactory.instanciate(UserFactory.instance).createRow();
+				user.setDisabled(false);
+				user.setDisplayName("Test User");
+				user.setEmailAddress("test@localhost");
+				user.setUserName("test");
+				connection.save(user.getTable());
+				
+				Session session = SessionFactory.instance.create();
+				session.login(connection, "administrator", "Welcome123");
+				
+				user = UserFactory.instance.loadByUserName(connection, "test");
+				user.resetPassword(session, "Welcome123", "Welcome123");
+				user.setDisabled(true);
+				
+				connection.save(user.getTable());
+				
+				session = SessionFactory.instance.create();
+				session.login(connection, "test", "Welcome123");
+			}
+			catch(InvalidLoginException ex) {
+				assertTrue(true);
+			}
+		});
+	}
+	@Test
+	void Login_NoPassword() throws Exception {
+		assertTrue(false);
+	}
 	@Test
 	void IsAllowed_AdministratorUser() throws Exception {
 		TestDatabase.runTest(connection -> {
@@ -98,7 +131,7 @@ class SessionTest {
 				user.setDisplayName("Test User");
 				user.setDisabled(false);
 				user.setEmailAddress("test@localhost");
-				((User) user).setUserName("test");
+				user.setUserName("test");
 				connection.save(user.getTable());
 				
 				Session session = SessionFactory.instance.create();
@@ -106,6 +139,11 @@ class SessionTest {
 
 				user = UserFactory.instance.loadByUserName(connection, "test");
 				user.resetPassword(session, "Welcome123", "Welcome123");
+				
+				Membership membership = TableFactory.instanciate(MembershipFactory.instance).createRow();
+				membership.setUsersGuid(user.getGuid());
+				membership.setGroupsGuid(Group.ADMINISTRATORS_GUID);
+				connection.save(membership.getTable());
 				
 				Securable securable = TableFactory.instanciate(SecurableFactory.instance).createRow();
 				securable.setDisabled(false);
@@ -116,8 +154,7 @@ class SessionTest {
 				session = SessionFactory.instance.create();
 				session.login(connection, "test", "Welcome123");
 				
-				assertTrue(false);
-				//assertTrue(session.isAllowed(securable.getGuid(), Action.READ_GUID));
+				assertTrue(session.isAllowed(securable.getGuid(), Action.READ_GUID));
 			}
 			catch(PasswordExpiredException ex) {
 				assertTrue(false);
