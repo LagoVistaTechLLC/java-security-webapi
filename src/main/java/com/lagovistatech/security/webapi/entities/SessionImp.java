@@ -93,11 +93,13 @@ public class SessionImp implements Session {
 		
 		this.securablesAllowedActions = new HashMap<UUID, Set<UUID>>();
 		for(SecurableAction row : table) {
-			if(!this.securablesAllowedActions.containsKey(row.getSecurablesGuid()))
-				this.securablesAllowedActions.put(row.getSecurablesGuid(), new HashSet<UUID>());
+			UUID securableGuid = row.getSecurablesGuid();
+			UUID actionGuid = row.getActionsGuid();
 			
-			if(!this.securablesAllowedActions.get(row.getSecurablesGuid()).contains(row.getActionsGuid()))
-				this.securablesAllowedActions.get(row.getSecurablesGuid()).add(row.getActionsGuid());
+			if(!this.securablesAllowedActions.containsKey(securableGuid))
+				this.securablesAllowedActions.put(securableGuid, new HashSet<UUID>());			
+			if(!this.securablesAllowedActions.get(securableGuid).contains(actionGuid))
+				this.securablesAllowedActions.get(securableGuid).add(actionGuid);
 		}
 	}
 	private void loadGroups() throws Exception {
