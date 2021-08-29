@@ -13,6 +13,7 @@ import java.util.UUID;
 import com.lagovistatech.Helpers;
 import com.lagovistatech.database.Connection;
 import com.lagovistatech.database.Parameters;
+import com.lagovistatech.database.RecordNotFoundException;
 import com.lagovistatech.database.Table;
 
 public class SessionImp implements Session {
@@ -47,6 +48,11 @@ public class SessionImp implements Session {
 	
 	public static final String AUTHENTICATION_FAILED = "Login failed!"; 
 	public void login(Connection connection, String userName, String password) throws Exception {
+		if(userName == null || userName.length() < 1)
+			throw new InvalidLoginException("No user name provided!");
+		if(password == null || password.length() < 1)
+			throw new InvalidLoginException("No password provided!");
+		
 		this.connection = connection;
 		loadUserForLogin(userName);
 		
@@ -122,18 +128,13 @@ public class SessionImp implements Session {
 		try {
 			user = UserFactory.instance.loadByUserName(connection, userName);
 		}
-		catch(Exception ex) {
-			if(ex.toString().contains("Could not load unique row for 'User Name'"))
-				throw new InvalidLoginException(AUTHENTICATION_FAILED);
-			
-			throw ex;
+		catch(RecordNotFoundException ex) {
+			throw new InvalidLoginException(AUTHENTICATION_FAILED);
 		}
 	}
 	
 	public boolean isAllowed(UUID securable, UUID action) {
-		if(this.user.getGuid().equals(User.ADMINISTRATORS_GUID))
-			return true;
-		if(this.isGroupMember(Group.ADMINISTRATORS_GUID))
+		if(isAdministration())
 			return true;
 		
 		if(!this.securablesAllowedActions.containsKey(securable))
@@ -142,5 +143,13 @@ public class SessionImp implements Session {
 			return false;
 		
 		return true;
+	}
+	public boolean isAdministration() {
+		if(this.user.getGuid().equals(User.ADMINISTRATORS_GUID))
+			return true;
+		if(this.isGroupMember(Group.ADMINISTRATORS_GUID))
+			return true;
+
+		return false;
 	}
 }

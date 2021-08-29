@@ -23,6 +23,7 @@ import java.util.HashMap;
 import com.lagovistatech.Factory;
 import com.lagovistatech.database.Connection;
 import com.lagovistatech.database.Parameters;
+import com.lagovistatech.database.RecordNotFoundException;
 import com.lagovistatech.database.Table;
 import com.lagovistatech.database.VersionedRow;
 

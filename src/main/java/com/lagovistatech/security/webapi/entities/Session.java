@@ -30,5 +30,7 @@ public interface Session {
 
 	User getUser();
 	void login(Connection conn, String userName, String password) throws Exception;
+	
 	boolean isAllowed(UUID securable, UUID action);
+	boolean isAdministration();
 }

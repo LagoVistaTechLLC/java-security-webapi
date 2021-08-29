@@ -27,4 +27,21 @@ class PasswordHasherTest {
 
 		assertTrue(firstHash.equals(repeatHash));
 	}
+	
+	@Test
+	void Complexity_Lowers() {
+		assertTrue(PasswordHasher.calculateComplexity("happy") == 1);
+	}
+	@Test
+	void Complexity_Uppers() {
+		assertTrue(PasswordHasher.calculateComplexity("HAPPY") == 1);
+	}
+	@Test
+	void Complexity_Numbers() {
+		assertTrue(PasswordHasher.calculateComplexity("123456789") == 1);
+	}
+	@Test
+	void Complexity_Other() {
+		assertTrue(PasswordHasher.calculateComplexity("!@#$%^") == 1);
+	}
 }

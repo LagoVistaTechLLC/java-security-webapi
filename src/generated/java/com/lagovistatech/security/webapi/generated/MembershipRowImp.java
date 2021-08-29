@@ -23,6 +23,7 @@ import java.util.HashMap;
 import com.lagovistatech.Factory;
 import com.lagovistatech.database.Connection;
 import com.lagovistatech.database.Parameters;
+import com.lagovistatech.database.RecordNotFoundException;
 import com.lagovistatech.database.Table;
 import com.lagovistatech.database.VersionedRow;
 
@@ -82,7 +83,7 @@ public class MembershipRowImp extends VersionedRow implements MembershipRow {
 		
 		Table<R> table = conn.fill(factory, sql, params);
 		if(table.size() != 1)
-			throw new Exception("Could not load unique row for 'Users'.'GUID' having a value of " + this.getUsersGuid().toString() + "!");
+			throw new RecordNotFoundException("Could not load unique row for 'Users'.'GUID' having a value of " + this.getUsersGuid().toString() + "!");
 		
 		return table.get(0);
 	}
@@ -98,7 +99,7 @@ public class MembershipRowImp extends VersionedRow implements MembershipRow {
 		
 		Table<R> table = conn.fill(factory, sql, params);
 		if(table.size() != 1)
-			throw new Exception("Could not load unique row for 'Groups'.'GUID' having a value of " + this.getGroupsGuid().toString() + "!");
+			throw new RecordNotFoundException("Could not load unique row for 'Groups'.'GUID' having a value of " + this.getGroupsGuid().toString() + "!");
 		
 		return table.get(0);
 	}

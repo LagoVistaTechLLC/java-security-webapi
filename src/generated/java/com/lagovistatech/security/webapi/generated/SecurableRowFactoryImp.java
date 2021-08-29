@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 import com.lagovistatech.database.Connection;
 import com.lagovistatech.database.Parameters;
+import com.lagovistatech.database.RecordNotFoundException;
 import com.lagovistatech.database.Table;
 
 public class SecurableRowFactoryImp<R extends SecurableRow> implements SecurableRowFactory<R> {
@@ -43,7 +44,7 @@ public class SecurableRowFactoryImp<R extends SecurableRow> implements Securable
 		
 		Table<R> table = conn.fill(this, sql, params);
 		if(table.size() != 1)
-			throw new Exception("Could not load unique row for 'GUID' having a value of " + value.toString() + "!");
+			throw new RecordNotFoundException("Could not load unique row for 'GUID' having a value of " + value.toString() + "!");
 		
 		return table.get(0);
 	}
@@ -59,7 +60,7 @@ public class SecurableRowFactoryImp<R extends SecurableRow> implements Securable
 		
 		Table<R> table = conn.fill(this, sql, params);
 		if(table.size() != 1)
-			throw new Exception("Could not load unique row for 'Display Name' having a value of " + value.toString() + "!");
+			throw new RecordNotFoundException("Could not load unique row for 'Display Name' having a value of " + value.toString() + "!");
 		
 		return table.get(0);
 	}

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import com.lagovistatech.Factory;
 import com.lagovistatech.database.Connection;
 import com.lagovistatech.database.Parameters;
+import com.lagovistatech.database.RecordNotFoundException;
 import com.lagovistatech.database.Table;
 import com.lagovistatech.database.VersionedRow;
 
@@ -88,7 +89,7 @@ public class SecurableActionRowImp extends VersionedRow implements SecurableActi
 		
 		Table<R> table = conn.fill(factory, sql, params);
 		if(table.size() != 1)
-			throw new Exception("Could not load unique row for 'Securables'.'GUID' having a value of " + this.getSecurablesGuid().toString() + "!");
+			throw new RecordNotFoundException("Could not load unique row for 'Securables'.'GUID' having a value of " + this.getSecurablesGuid().toString() + "!");
 		
 		return table.get(0);
 	}
@@ -104,7 +105,7 @@ public class SecurableActionRowImp extends VersionedRow implements SecurableActi
 		
 		Table<R> table = conn.fill(factory, sql, params);
 		if(table.size() != 1)
-			throw new Exception("Could not load unique row for 'Actions'.'GUID' having a value of " + this.getActionsGuid().toString() + "!");
+			throw new RecordNotFoundException("Could not load unique row for 'Actions'.'GUID' having a value of " + this.getActionsGuid().toString() + "!");
 		
 		return table.get(0);
 	}

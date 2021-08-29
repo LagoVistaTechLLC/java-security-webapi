@@ -32,4 +32,24 @@ public class PasswordHasher {
 			.getEncoded();
 
 	}
+	
+	public static int calculateComplexity(String value) {
+		int hasLower = 0;
+		int hasUpper = 0;
+		int hasNumber = 0;
+		int hasOther = 0;
+		
+		for(char c : value.toCharArray()) {
+			if(Character.isLowerCase(c))
+				hasLower = 1;
+			else if(Character.isUpperCase(c))
+				hasUpper = 1;
+			else if(Character.isDigit(c))
+				hasNumber = 1;
+			else
+				hasOther = 1;
+		}
+		
+		return hasLower + hasNumber + hasOther + hasUpper;
+	}
 }

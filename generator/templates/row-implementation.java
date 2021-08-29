@@ -23,6 +23,7 @@ import java.util.HashMap;
 import com.lagovistatech.Factory;
 import com.lagovistatech.database.Connection;
 import com.lagovistatech.database.Parameters;
+import com.lagovistatech.database.RecordNotFoundException;
 import com.lagovistatech.database.Table;
 import com.lagovistatech.database.VersionedRow;
 
@@ -70,7 +71,7 @@ public class __table_name_camel_singular__RowImp extends VersionedRow implements
 		
 		Table<R> table = conn.fill(factory, sql, params);
 		if(table.size() != 1)
-			throw new Exception("Could not load unique row for '__parent_parent_table__'.'__parent_parent_column__' having a value of " + this.get__parent_child_column_camel__().toString() + "!");
+			throw new RecordNotFoundException("Could not load unique row for '__parent_parent_table__'.'__parent_parent_column__' having a value of " + this.get__parent_child_column_camel__().toString() + "!");
 		
 		return table.get(0);
 	}

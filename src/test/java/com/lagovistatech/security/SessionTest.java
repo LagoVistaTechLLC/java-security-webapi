@@ -6,7 +6,7 @@ import java.sql.Date;
 
 import org.junit.jupiter.api.Test;
 
-import com.lagovistatech.database.Connection;
+import com.lagovistatech.database.Table;
 import com.lagovistatech.database.TableFactory;
 import com.lagovistatech.security.webapi.entities.Action;
 import com.lagovistatech.security.webapi.entities.Group;
@@ -106,12 +106,57 @@ class SessionTest {
 			}
 		});
 	}
+	@Test
+	void Login_PasswordNotSet() throws Exception {
+		TestDatabase.runTest(connection -> {
+			Table<User> table = TableFactory.instanciate(UserFactory.instance);
+			
+			User adminUser = table.createRow();
+			adminUser.setDisabled(false);
+			adminUser.setDisplayName("Admin User");
+			adminUser.setEmailAddress("admin@localhost");
+			adminUser.setUserName("admin");
 
+			connection.save(table);
+						
+			Session session = SessionFactory.instance.create();
+			try { session.login(connection, "admin", "Welcome123"); }
+			catch(InvalidLoginException ex) {
+				assertTrue(true);
+				return;
+			}
+			
+			fail("InvalidLoginException should have been thrown!");
+			
+		});
+	}
 	@Test
 	void Login_NoPassword() throws Exception {
-		assertTrue(false);
+		TestDatabase.runTest(connection -> {
+			try {
+				Session session = SessionFactory.instance.create();
+				session.login(connection, "administrator", "");
+				fail("No exception thrown for invalid login.");
+			} catch(InvalidLoginException ex) {
+				assertTrue(true);
+			}
+		});
 	}
-	@Test	void IsAllowed_AdministratorUser() throws Exception {
+	@Test	
+	void Login_NoUser() throws Exception {
+		TestDatabase.runTest(connection -> {
+			try {
+				Session session = SessionFactory.instance.create();
+				session.login(connection, "", "Welcome123");
+				fail("No exception thrown for invalid login.");
+			} catch(InvalidLoginException ex) {
+				assertTrue(true);
+			}
+		});
+	}
+	
+	@Test	
+	void IsAllowed_AdministratorUser() throws Exception {
 		TestDatabase.runTest(connection -> {
 			Securable securable = TableFactory.instanciate(SecurableFactory.instance).createRow();
 			securable.setDisabled(false);
@@ -249,4 +294,94 @@ class SessionTest {
 			assertTrue(session.isAllowed(securable.getGuid(), Action.READ_GUID));
 		});
 	}
+
+	@Test
+	void IsAllowed_FailNoSecurable() throws Exception {
+		TestDatabase.runTest(connection -> {
+			User user = TableFactory.instanciate(UserFactory.instance).createRow();
+			user.setDisplayName("Test User");
+			user.setDisabled(false);
+			user.setEmailAddress("test@localhost");
+			user.setUserName("test");
+			connection.save(user.getTable());
+
+			Session session = SessionFactory.instance.create();
+			session.login(connection, "administrator", "Welcome123");
+
+			user = UserFactory.instance.loadByUserName(connection, "test");
+			user.resetPassword(session, "Welcome123", "Welcome123");
+
+			Membership membership = TableFactory.instanciate(MembershipFactory.instance).createRow();
+			membership.setUsersGuid(user.getGuid());
+			membership.setGroupsGuid(Group.EVERYONES_GUID);
+			connection.save(membership.getTable());
+
+			Securable securable = TableFactory.instanciate(SecurableFactory.instance).createRow();
+			securable.setDisabled(false);
+			securable.setDisplayName("Test Securable");
+			connection.save(securable.getTable());
+			securable = SecurableFactory.instance.loadByDisplayName(connection, "Test Securable");
+			
+			SecurableAction secAction = TableFactory.instanciate(SecurableActionFactory.instance).createRow();
+			secAction.setSecurablesGuid(securable.getGuid());
+			secAction.setActionsGuid(Action.READ_GUID);
+			connection.save(secAction.getTable());
+			secAction = SecurableActionFactory.instance.loadByGuid(connection, secAction.getGuid());
+			
+//			Permission permission = TableFactory.instanciate(PermissionFactory.instance).createRow();
+//			permission.setGroupsGuid(Group.EVERYONES_GUID);
+//			permission.setSecurableActionsGuid(secAction.getGuid());
+//			connection.save(permission.getTable());
+		
+			session = SessionFactory.instance.create();
+			session.login(connection, "test", "Welcome123");
+
+			assertFalse(session.isAllowed(securable.getGuid(), Action.READ_GUID));
+		});
+	}
+	@Test
+	void IsAllowed_FailNoAction() throws Exception {
+		TestDatabase.runTest(connection -> {
+			User user = TableFactory.instanciate(UserFactory.instance).createRow();
+			user.setDisplayName("Test User");
+			user.setDisabled(false);
+			user.setEmailAddress("test@localhost");
+			user.setUserName("test");
+			connection.save(user.getTable());
+
+			Session session = SessionFactory.instance.create();
+			session.login(connection, "administrator", "Welcome123");
+
+			user = UserFactory.instance.loadByUserName(connection, "test");
+			user.resetPassword(session, "Welcome123", "Welcome123");
+
+			Membership membership = TableFactory.instanciate(MembershipFactory.instance).createRow();
+			membership.setUsersGuid(user.getGuid());
+			membership.setGroupsGuid(Group.EVERYONES_GUID);
+			connection.save(membership.getTable());
+
+			Securable securable = TableFactory.instanciate(SecurableFactory.instance).createRow();
+			securable.setDisabled(false);
+			securable.setDisplayName("Test Securable");
+			connection.save(securable.getTable());
+			securable = SecurableFactory.instance.loadByDisplayName(connection, "Test Securable");
+			
+			SecurableAction secAction = TableFactory.instanciate(SecurableActionFactory.instance).createRow();
+			secAction.setSecurablesGuid(securable.getGuid());
+			secAction.setActionsGuid(Action.UPDATE_GUID);
+			connection.save(secAction.getTable());
+			secAction = SecurableActionFactory.instance.loadByGuid(connection, secAction.getGuid());
+			
+			Permission permission = TableFactory.instanciate(PermissionFactory.instance).createRow();
+			permission.setGroupsGuid(Group.EVERYONES_GUID);
+			permission.setSecurableActionsGuid(secAction.getGuid());
+			connection.save(permission.getTable());
+		
+			session = SessionFactory.instance.create();
+			session.login(connection, "test", "Welcome123");
+
+			assertFalse(session.isAllowed(securable.getGuid(), Action.READ_GUID));
+		});
+	}
+	
 }

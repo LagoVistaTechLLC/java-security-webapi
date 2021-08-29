@@ -1,6 +1,5 @@
 package com.lagovistatech.security.webapi.entities;
 
-
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -21,7 +20,13 @@ public class UserImp extends UserRowImp implements User {
 		super(values);
 	}
 
-	public void resetPassword(Session session, String newPassword, String confirmPassword) throws Exception { 
+	public void resetPassword(Session session, String newPassword, String confirmPassword) throws Exception {
+		if(!session.isAdministration())
+			throw new AccessDeniedException("Only administrators can reset a password!");
+		
+		unsecuredResetPassword(session, newPassword, confirmPassword);
+	}
+	private void unsecuredResetPassword(Session session, String newPassword, String confirmPassword) throws Exception { 
 		if(newPassword == null || confirmPassword == null)
 			throw new Exception("You must specify a new and confirm password");
 		if(!newPassword.equals(confirmPassword))
@@ -43,6 +48,9 @@ public class UserImp extends UserRowImp implements User {
 		this.setVersion(reloaded.getVersion());
 	}
 	public boolean validatePassword(String password) throws Exception {
+		if(this.getPasswordIterations() == null || this.getPasswordHash() == null || this.getPasswordSalt() == null)
+			return false;
+		
 		PasswordHasher ph = new PasswordHasher(SALT_LENGTH, this.getPasswordIterations(), KEY_LENGTH);
 		ph.setSalt(this.getPasswordSalt());
 		byte[] potential = ph.calculate(password);
@@ -56,6 +64,27 @@ public class UserImp extends UserRowImp implements User {
 				return false;
 		
 		return true;
+	}
+	public void changePassword(Session session, String currentPassword, String newPassword, String confirmPassword) throws Exception {
+		if(newPassword == null || confirmPassword == null)
+			throw new Exception("You must provide a new password!");
+		if(!newPassword.equals(confirmPassword))
+			throw new Exception("The new password and confirm password do not match!");
+		if(newPassword.length() < 1)
+			throw new Exception("You must provide a new password!");
+
+		int minLength = Integer.parseInt(session.getSettingByKey(User.SETTING_MINIMUM_PASSWORD_LENGTH).getValue());
+		if(newPassword.length() < minLength)
+			throw new Exception("The password does not meet the length requirements of at least " + minLength + " charaters long!");
+		
+		int minComplexity = Integer.parseInt(session.getSettingByKey(User.SETTING_MINIMUM_PASSWORD_COMPLEXITY).getValue());
+		if(PasswordHasher.calculateComplexity(newPassword) < minComplexity)
+			throw new Exception("The password does not meet complexity requirements of at least " + minComplexity + " charater catagories (lower case, upper case, numbers, and symbols)!");
+
+		if(!validatePassword(currentPassword))
+			throw new InvalidLoginException("Could not validate current password!");	
+		
+		unsecuredResetPassword(session, newPassword, confirmPassword);
 	}
 	
 	public <R extends GroupRow> Table<R> loadMyGroups(Connection conn, GroupRowFactory<R> factory) throws Exception {

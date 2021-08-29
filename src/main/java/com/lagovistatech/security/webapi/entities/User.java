@@ -15,7 +15,9 @@ public interface User extends UserRow {
 	public static String SETTING_MAXIMUM_PASSWORD_AGE_IN_DAYS = "Maximum Password Age in Days";
 	public static String SETTING_MINIMUM_PASSWORD_COMPLEXITY = "Minimum Password Complexity";
 	
-	void resetPassword(Session session, String newPassword, String confirmPassword) throws Exception;
 	boolean validatePassword(String password) throws Exception;
+	void resetPassword(Session session, String newPassword, String confirmPassword) throws Exception;
+	void changePassword(Session session, String currentPassword, String newPassword, String confirmPassword) throws Exception;
+
 	<R extends GroupRow> Table<R> loadMyGroups(Connection conn, GroupRowFactory<R> factory) throws Exception;
 }
