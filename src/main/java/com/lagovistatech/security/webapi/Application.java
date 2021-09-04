@@ -1,5 +1,7 @@
 package com.lagovistatech.security.webapi;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,6 +10,8 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class Application {
+	private static final Logger logger = LoggerFactory.getLogger("c.lvt.s.w.Application");
+	
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
@@ -15,28 +19,9 @@ public class Application {
 	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {
-			System.out.println();
-			System.out.println(
-				  "-------------------------------------------------------------------------------\n"
-				+ "\n"
-				+ "Authentication WebAPI\n"
-				+ "Copyright (C) 2021 Lag Vista Technologies\n"
-				+ "\n"
-				+ "This program is free software: you can redistribute it and/or modify\n"
-				+ "it under the terms of the GNU Affero General Public License as\n"
-				+ "published by the Free Software Foundation, either version 3 of the\n"
-				+ "License, or (at your option) any later version.\n"
-				+ "\n"
-				+ "This program is distributed in the hope that it will be useful,\n"
-				+ "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-				+ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-				+ "GNU Affero General Public License for more details.\n"
-				+ "\n"
-				+ "You should have received a copy of the GNU Affero General Public License\n"
-				+ "along with this program.  If not, see <https://www.gnu.org/licenses/>.\n"
-				+ "\n"
-				+ "-------------------------------------------------------------------------------\n"
-			);
+			logger.info("Authentication WebAPI");
+			logger.info("Copyright (c) 2021 Lago Vista Technologies");
+			logger.info("GNU Affero General Public License v3");
 		};
 	}
 }

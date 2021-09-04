@@ -1,4 +1,4 @@
-package com.lagovistatech.security;
+package com.lagovistatech.security.webapi.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,19 +64,15 @@ class SessionTest {
 	@Test
 	void Login_PasswordExpired() throws Exception {
 		TestDatabase.runTest(connection -> {
-			try {
-				User admin = UserFactory.instance.loadByUserName(connection, "administrator");
-				Date expired = Date.valueOf("2000-1-1");
-				admin.setPasswordDate(expired);
+			User admin = UserFactory.instance.loadByUserName(connection, "administrator");
+			Date expired = Date.valueOf("2000-1-1");
+			admin.setPasswordDate(expired);
 
-				connection.save(admin.getTable());
+			connection.save(admin.getTable());
 
-				Session session = SessionFactory.instance.create();
-				session.login(connection, "administrator", "Welcome123");
-				fail("No exception thrown for expired password!");
-			} catch(PasswordExpiredException ex) {
-				assertTrue(true);
-			}
+			Session session = SessionFactory.instance.create();
+			session.login(connection, "administrator", "Welcome123");
+			assertTrue(session.isPasswordExpired());
 		});
 	}
 	@Test

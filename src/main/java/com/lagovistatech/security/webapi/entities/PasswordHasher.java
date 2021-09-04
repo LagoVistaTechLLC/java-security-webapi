@@ -17,7 +17,12 @@ public class PasswordHasher {
 	}
 	
 	private int keyLength;
+	public void setKeyLength(int value) { keyLength = value; }
+	public int getKeyLength() { return keyLength; }
+	
 	private int iterations;
+	public void setIterations(int value) { iterations = value; }
+	public int getItterations() { return iterations; }
 	
 	private byte[] salt;
 	public void setSalt(byte[] salt) { this.salt = salt; }

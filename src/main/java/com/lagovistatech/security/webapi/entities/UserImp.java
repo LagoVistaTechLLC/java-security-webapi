@@ -7,17 +7,18 @@ import com.lagovistatech.Helpers;
 import com.lagovistatech.database.Connection;
 import com.lagovistatech.database.Parameters;
 import com.lagovistatech.database.Table;
+import com.lagovistatech.security.dto.UserDto;
+import com.lagovistatech.security.dto.UserDtoCopier;
 import com.lagovistatech.security.webapi.generated.GroupRow;
 import com.lagovistatech.security.webapi.generated.GroupRowFactory;
 import com.lagovistatech.security.webapi.generated.UserRowImp;
 
-public class UserImp extends UserRowImp implements User {
-	private static final int SALT_LENGTH = 32;
-	private static final int ITERATIONS = 10000;
-	private static final int KEY_LENGTH = 512;
-	
-	protected UserImp(HashMap<String, Object> values) {
+public class UserImp extends UserRowImp implements User {	
+	private PasswordHasher hasher;
+	protected UserImp(HashMap<String, Object> values, PasswordHasher hasher) {
 		super(values);
+		
+		this.hasher = hasher;
 	}
 
 	public void resetPassword(Session session, String newPassword, String confirmPassword) throws Exception {
@@ -32,10 +33,9 @@ public class UserImp extends UserRowImp implements User {
 		if(!newPassword.equals(confirmPassword))
 			throw new PasswordMismatchException("The new and confirm passwords do not match!");
 		
-		PasswordHasher ph = new PasswordHasher(SALT_LENGTH, ITERATIONS, KEY_LENGTH);
-		this.setPasswordHash(ph.calculate(newPassword));
-		this.setPasswordIterations(ITERATIONS);
-		this.setPasswordSalt(ph.getSalt());
+		this.setPasswordHash(hasher.calculate(newPassword));
+		this.setPasswordIterations(hasher.getItterations());
+		this.setPasswordSalt(hasher.getSalt());
 		this.setPasswordDate(new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
 		
 		session.getConnection().save(getTable());
@@ -51,9 +51,8 @@ public class UserImp extends UserRowImp implements User {
 		if(this.getPasswordIterations() == null || this.getPasswordHash() == null || this.getPasswordSalt() == null)
 			return false;
 		
-		PasswordHasher ph = new PasswordHasher(SALT_LENGTH, this.getPasswordIterations(), KEY_LENGTH);
-		ph.setSalt(this.getPasswordSalt());
-		byte[] potential = ph.calculate(password);
+		hasher.setSalt(this.getPasswordSalt());
+		byte[] potential = hasher.calculate(password);
 		byte[] actual = this.getPasswordHash();
 		
 		if(potential.length != actual.length)
@@ -95,4 +94,8 @@ public class UserImp extends UserRowImp implements User {
 		
 		return conn.fill(factory, sql, params);
 	}
+
+	private static final UserDtoCopier copier = new UserDtoCopier();
+	public void copyFrom(UserDto source) { copier.copy(source, this); }
+	public void copyTo(UserDto destination) { copier.copy(this, destination); }
 }

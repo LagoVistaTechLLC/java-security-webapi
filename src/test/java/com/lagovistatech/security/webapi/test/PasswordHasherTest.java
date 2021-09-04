@@ -1,4 +1,4 @@
-package com.lagovistatech.security;
+package com.lagovistatech.security.webapi.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,9 +21,32 @@ class PasswordHasherTest {
 		byte[] repeatedKey = repeatPh.calculate("Welcome123");
 		String repeatHash = Hex.encodeHexString(repeatedKey);
 		
+		System.out.println("------------------------------------------------------------------------");
 		System.out.println("Iterations: " + iterations);
 		System.out.println("Salt: " + Hex.encodeHexString(firstPh.getSalt()));
 		System.out.println("Hash: " + firstHash);
+		System.out.println("------------------------------------------------------------------------");
+
+		assertTrue(firstHash.equals(repeatHash));
+	}
+	@Test
+	void Repeatable_Hash_1() throws Exception {
+		int iterations = 1;
+		
+		PasswordHasher firstPh = new PasswordHasher(32, iterations, 512);
+		byte[] firstKey = firstPh.calculate("Welcome123");
+		String firstHash = Hex.encodeHexString(firstKey);
+		
+		PasswordHasher repeatPh = new PasswordHasher(32, iterations, 512);
+		repeatPh.setSalt(firstPh.getSalt());
+		byte[] repeatedKey = repeatPh.calculate("Welcome123");
+		String repeatHash = Hex.encodeHexString(repeatedKey);
+		
+		System.out.println("------------------------------------------------------------------------");
+		System.out.println("Iterations: " + iterations);
+		System.out.println("Salt: " + Hex.encodeHexString(firstPh.getSalt()));
+		System.out.println("Hash: " + firstHash);
+		System.out.println("------------------------------------------------------------------------");
 
 		assertTrue(firstHash.equals(repeatHash));
 	}

@@ -67,8 +67,7 @@ public class SessionImp implements Session {
 		int maxDays = Integer.parseInt(this.getSettingByKey(User.SETTING_MAXIMUM_PASSWORD_AGE_IN_DAYS).getValue());
 		Calendar minPasswordDate = Calendar.getInstance();
 		minPasswordDate.add(Calendar.DATE, maxDays * -1);
-		if(user.getPasswordDate().before(minPasswordDate.getTime()))
-			throw new PasswordExpiredException("Password has expired!");
+		passwordExpired = user.getPasswordDate().before(minPasswordDate.getTime());
 		
 		loadGroups();
 		loadActions();
@@ -132,6 +131,9 @@ public class SessionImp implements Session {
 			throw new InvalidLoginException(AUTHENTICATION_FAILED);
 		}
 	}
+	
+	private boolean passwordExpired = false;
+	public boolean isPasswordExpired() { return passwordExpired; }
 	
 	public boolean isAllowed(UUID securable, UUID action) {
 		if(isAdministration())

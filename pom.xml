@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.lagovistatech</groupId>
-	<artifactId>authentication.service</artifactId>
+	<artifactId>security.webapi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<distributionManagement>
 		<repository>
@@ -46,6 +46,11 @@
 			<artifactId>commons-codec</artifactId>
 			<version>1.15</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-model</artifactId>
+			<version>3.3.9</version>
 		</dependency>
 	</dependencies>
 </project>
