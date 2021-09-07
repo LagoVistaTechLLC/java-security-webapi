@@ -20,7 +20,7 @@ package com.lagovistatech.security.dto;
 
 import com.lagovistatech.security.webapi.entities.Membership;
 
-public class MembershipDto implements Copier<Membership> {
+public class MembershipDto implements DtoCopier<Membership> {
 	
 	private java.lang.Long myVersion;
 	public java.lang.Long getVersion() { return myVersion; } 

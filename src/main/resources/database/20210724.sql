@@ -139,5 +139,7 @@ INSERT INTO "Settings" ("GUID", "Version", "Users GUID", "Key", "Value", "Server
 VALUES ('7f9c42c4b2264892887b4b31e944b568', 1, NULL, 'Maximum Password Age in Days', '45', FALSE);
 INSERT INTO "Settings" ("GUID", "Version", "Users GUID", "Key", "Value", "Server Side Only")
 VALUES ('80b3c9a9a561416d89bc2718931557c8', 1, NULL, 'Minimum Password Complexity', '3', FALSE);
-
-
+INSERT INTO "Settings" ("GUID", "Version", "Users GUID", "Key", "Value", "Server Side Only")
+VALUES ('b3f0e6f09a2340649440fda14a688840', 1, NULL, 'Password Hash Iterations', '100000', FALSE);
+INSERT INTO "Settings" ("GUID", "Version", "Users GUID", "Key", "Value", "Server Side Only")
+VALUES ('ad4bc49afdec4896834dba9983691582', 1, NULL, 'Session Timeout in Seconds', '1200', FALSE);

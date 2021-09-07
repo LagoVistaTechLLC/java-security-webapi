@@ -20,7 +20,7 @@ package com.lagovistatech.security.dto;
 
 import com.lagovistatech.security.webapi.entities.SecurableAction;
 
-public class SecurableActionDto implements Copier<SecurableAction> {
+public class SecurableActionDto implements DtoCopier<SecurableAction> {
 	
 	private java.lang.Long myVersion;
 	public java.lang.Long getVersion() { return myVersion; } 

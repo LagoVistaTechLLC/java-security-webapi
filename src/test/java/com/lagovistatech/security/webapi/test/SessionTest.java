@@ -33,8 +33,6 @@ class SessionTest {
 			session.login(connection, "administrator", "Welcome123");
 
 			assertTrue(session.getUser().getUserName().equals("administrator"));
-			assertTrue(session.getGroups().size() == 2);
-			assertTrue(session.getSettingByKey(User.SETTING_MAXIMUM_PASSWORD_AGE_IN_DAYS) != null);
 		});
 	}
 	@Test

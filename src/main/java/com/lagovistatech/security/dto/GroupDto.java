@@ -20,7 +20,7 @@ package com.lagovistatech.security.dto;
 
 import com.lagovistatech.security.webapi.entities.Group;
 
-public class GroupDto implements Copier<Group> {
+public class GroupDto implements DtoCopier<Group> {
 	
 	private java.lang.String myDisplayName;
 	public java.lang.String getDisplayName() { return myDisplayName; } 

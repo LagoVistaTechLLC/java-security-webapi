@@ -20,7 +20,7 @@ package com.lagovistatech.security.dto;
 
 import com.lagovistatech.security.webapi.entities.User;
 
-public class UserDto implements Copier<User> {
+public class UserDto implements DtoCopier<User> {
 	
 	private java.lang.String myDisplayName;
 	public java.lang.String getDisplayName() { return myDisplayName; } 

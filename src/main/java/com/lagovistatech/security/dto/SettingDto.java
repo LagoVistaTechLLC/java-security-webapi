@@ -20,7 +20,7 @@ package com.lagovistatech.security.dto;
 
 import com.lagovistatech.security.webapi.entities.Setting;
 
-public class SettingDto implements Copier<Setting> {
+public class SettingDto implements DtoCopier<Setting> {
 	
 	private java.lang.Long myVersion;
 	public java.lang.Long getVersion() { return myVersion; } 

@@ -1,37 +1,26 @@
 package com.lagovistatech.security.webapi.entities;
 
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import com.lagovistatech.database.Connection;
+import com.lagovistatech.database.RecordNotFoundException;
 
-/**
- * The session holds data about the user, groups they belong to, permissions,
- * and settings defined for the system.  The client will be provided two 
- * instances of this object - a client readable version, and a version that is
- * encrypted and readable by other web API end points.
- */
 public interface Session {
+	static final String SETTING_SESSION_TIMEOUT_IN_SECONDS = "Session Timeout in Seconds";
+
 	Connection getConnection();
-
-	Timestamp getExpires();
-
-	Setting getSettingByKey(String key);
-	
-	Map<UUID, Action> getActions();	
-	Map<UUID, Securable> getSecurables();
-	Map<UUID, Set<UUID>> getSecurablesAllowedActions();
-
-	List<Group> getGroups();
-	boolean isGroupMember(UUID group);
-
 	User getUser();
-	void login(Connection conn, String userName, String password) throws Exception;
-	boolean isPasswordExpired();
-	
-	boolean isAllowed(UUID securable, UUID action);
+	Group getGroup(UUID groupsGuid) throws RecordNotFoundException;
+	Action getAction(UUID actionsGuid) throws RecordNotFoundException;
+	Securable getSecurable(UUID securablesGuid) throws RecordNotFoundException;
+	Setting getSetting(String key);
+	long getSecondsTillExpiration();
+
+	boolean isMemberOfGroup(UUID groupsGuid);
 	boolean isAdministration();
+	boolean isAllowed(UUID securablesGuid, UUID actionsGuid);
+	boolean isPasswordExpired();
+	boolean isExpired();
+
+	void login(Connection connection, String userName, String password) throws Exception;
 }

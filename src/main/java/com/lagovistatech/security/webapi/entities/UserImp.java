@@ -11,6 +11,7 @@ import com.lagovistatech.security.dto.UserDto;
 import com.lagovistatech.security.dto.UserDtoCopier;
 import com.lagovistatech.security.webapi.generated.GroupRow;
 import com.lagovistatech.security.webapi.generated.GroupRowFactory;
+import com.lagovistatech.security.webapi.generated.SecurableActionRowFactory;
 import com.lagovistatech.security.webapi.generated.UserRowImp;
 
 public class UserImp extends UserRowImp implements User {	
@@ -72,11 +73,11 @@ public class UserImp extends UserRowImp implements User {
 		if(newPassword.length() < 1)
 			throw new Exception("You must provide a new password!");
 
-		int minLength = Integer.parseInt(session.getSettingByKey(User.SETTING_MINIMUM_PASSWORD_LENGTH).getValue());
+		int minLength = Integer.parseInt(session.getSetting(User.SETTING_MINIMUM_PASSWORD_LENGTH).getValue());
 		if(newPassword.length() < minLength)
 			throw new Exception("The password does not meet the length requirements of at least " + minLength + " charaters long!");
 		
-		int minComplexity = Integer.parseInt(session.getSettingByKey(User.SETTING_MINIMUM_PASSWORD_COMPLEXITY).getValue());
+		int minComplexity = Integer.parseInt(session.getSetting(User.SETTING_MINIMUM_PASSWORD_COMPLEXITY).getValue());
 		if(PasswordHasher.calculateComplexity(newPassword) < minComplexity)
 			throw new Exception("The password does not meet complexity requirements of at least " + minComplexity + " charater catagories (lower case, upper case, numbers, and symbols)!");
 
@@ -93,6 +94,14 @@ public class UserImp extends UserRowImp implements User {
 		params.put("@UsersGuid", this.getGuid());
 		
 		return conn.fill(factory, sql, params);
+	}
+	public <R extends SecurableAction> Table<R> loadSecurableActions(Connection connection, SecurableActionRowFactory<R> factory) throws Exception {
+		String sql = Helpers.readResourceAsString(getClass(), "/UserImp.loadSecurableActions.sql");
+		
+		Parameters params = new Parameters();
+		params.put("@UsersGuid", this.getGuid());
+		
+		return connection.fill(factory, sql, params);
 	}
 
 	private static final UserDtoCopier copier = new UserDtoCopier();

@@ -20,7 +20,7 @@ package com.lagovistatech.security.dto;
 
 import com.lagovistatech.security.webapi.entities.Permission;
 
-public class PermissionDto implements Copier<Permission> {
+public class PermissionDto implements DtoCopier<Permission> {
 	
 	private java.lang.Long myVersion;
 	public java.lang.Long getVersion() { return myVersion; } 

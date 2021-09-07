@@ -8,6 +8,7 @@ import com.lagovistatech.database.Table;
 import com.lagovistatech.security.dto.UserDto;
 import com.lagovistatech.security.webapi.generated.GroupRow;
 import com.lagovistatech.security.webapi.generated.GroupRowFactory;
+import com.lagovistatech.security.webapi.generated.SecurableActionRowFactory;
 import com.lagovistatech.security.webapi.generated.UserRow;
 
 public interface User extends UserRow { 
@@ -21,7 +22,9 @@ public interface User extends UserRow {
 	void changePassword(Session session, String currentPassword, String newPassword, String confirmPassword) throws Exception;
 
 	<R extends GroupRow> Table<R> loadMyGroups(Connection conn, GroupRowFactory<R> factory) throws Exception;
+	<R extends SecurableAction> Table<R> loadSecurableActions(Connection connection, SecurableActionRowFactory<R> factory) throws Exception;
 	
 	public void copyFrom(UserDto source);
 	public void copyTo(UserDto destination);
+	
 }
