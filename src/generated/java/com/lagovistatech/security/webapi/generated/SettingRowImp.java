@@ -48,6 +48,12 @@ public class SettingRowImp extends VersionedRow implements SettingRow {
 	}
 	public void setServerSideOnly(java.lang.Boolean value) { this.set(SERVER_SIDE_ONLY, value); }
 	
+	public java.util.UUID getGroupsGuid() {
+		Object ret = this.get(GROUPS_GUID);
+		return ret == null ? null : (java.util.UUID) ret;		
+	}
+	public void setGroupsGuid(java.util.UUID value) { this.set(GROUPS_GUID, value); }
+	
 	public java.util.UUID getGuid() {
 		Object ret = this.get(GUID);
 		return ret == null ? null : (java.util.UUID) ret;		
@@ -77,6 +83,38 @@ public class SettingRowImp extends VersionedRow implements SettingRow {
 	
 		
 	/* PARENTS */
+	
+	public <R extends UserRow> R loadUser(Connection conn, UserRowFactory<R> factory) throws Exception {
+		String sql = 
+			"SELECT * " + 
+			"FROM " + conn.getAdapter().quoteIdentifier("Users") + " " + 
+			"WHERE " + conn.getAdapter().quoteIdentifier("GUID") + "=@Value";
+		
+		Parameters params = new Parameters();
+		params.put("@Value", this.getUsersGuid());
+		
+		Table<R> table = conn.fill(factory, sql, params);
+		if(table.size() != 1)
+			throw new RecordNotFoundException("Could not load unique row for 'Users'.'GUID' having a value of " + this.getUsersGuid().toString() + "!");
+		
+		return table.get(0);
+	}
+	
+	public <R extends GroupRow> R loadGroup(Connection conn, GroupRowFactory<R> factory) throws Exception {
+		String sql = 
+			"SELECT * " + 
+			"FROM " + conn.getAdapter().quoteIdentifier("Groups") + " " + 
+			"WHERE " + conn.getAdapter().quoteIdentifier("GUID") + "=@Value";
+		
+		Parameters params = new Parameters();
+		params.put("@Value", this.getGroupsGuid());
+		
+		Table<R> table = conn.fill(factory, sql, params);
+		if(table.size() != 1)
+			throw new RecordNotFoundException("Could not load unique row for 'Groups'.'GUID' having a value of " + this.getGroupsGuid().toString() + "!");
+		
+		return table.get(0);
+	}
 	
 	
 }

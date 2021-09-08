@@ -53,9 +53,9 @@ public interface PermissionRow extends Row, Versioned {
 
 	/* PARENTS */
 	
-	<R extends SecurableActionRow> R loadSecurableActionByMySecurableActionsGuid(Connection conn, SecurableActionRowFactory<R> factory) throws Exception;	
+	<R extends SecurableActionRow> R loadSecurableAction(Connection conn, SecurableActionRowFactory<R> factory) throws Exception;	
 	
-	<R extends GroupRow> R loadGroupByMyGroupsGuid(Connection conn, GroupRowFactory<R> factory) throws Exception;	
+	<R extends GroupRow> R loadGroup(Connection conn, GroupRowFactory<R> factory) throws Exception;	
 		
 
 }

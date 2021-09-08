@@ -25,6 +25,8 @@ public class SettingDtoCopier {
 		
 		destination.setServerSideOnly(source.getServerSideOnly());
 		
+		destination.setGroupsGuid(source.getGroupsGuid());
+		
 		destination.setGuid(source.getGuid());
 		
 		destination.setValue(source.getValue());
@@ -39,6 +41,8 @@ public class SettingDtoCopier {
 		destination.setVersion(source.getVersion());
 		
 		destination.setServerSideOnly(source.getServerSideOnly());
+		
+		destination.setGroupsGuid(source.getGroupsGuid());
 		
 		destination.setGuid(source.getGuid());
 		

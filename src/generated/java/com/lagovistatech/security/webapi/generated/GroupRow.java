@@ -54,9 +54,11 @@ public interface GroupRow extends Row, Versioned {
 	
 	/* CHILDREN */
 	
-	<R extends MembershipRow> Table<R> loadMembershipsByGroupsGuidEqualsMyGuid(Connection conn, MembershipRowFactory<R> factory) throws Exception;	
+	<R extends MembershipRow> Table<R> loadMemberships(Connection conn, MembershipRowFactory<R> factory) throws Exception;	
 	
-	<R extends PermissionRow> Table<R> loadPermissionsByGroupsGuidEqualsMyGuid(Connection conn, PermissionRowFactory<R> factory) throws Exception;	
+	<R extends PermissionRow> Table<R> loadPermissions(Connection conn, PermissionRowFactory<R> factory) throws Exception;	
+	
+	<R extends SettingRow> Table<R> loadSettings(Connection conn, SettingRowFactory<R> factory) throws Exception;	
 		
 
 	/* PARENTS */

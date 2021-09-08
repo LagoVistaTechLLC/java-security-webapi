@@ -50,14 +50,14 @@ public interface SecurableActionRow extends Row, Versioned {
 	
 	/* CHILDREN */
 	
-	<R extends PermissionRow> Table<R> loadPermissionsBySecurableActionsGuidEqualsMyGuid(Connection conn, PermissionRowFactory<R> factory) throws Exception;	
+	<R extends PermissionRow> Table<R> loadPermissions(Connection conn, PermissionRowFactory<R> factory) throws Exception;	
 		
 
 	/* PARENTS */
 	
-	<R extends SecurableRow> R loadSecurableByMySecurablesGuid(Connection conn, SecurableRowFactory<R> factory) throws Exception;	
+	<R extends SecurableRow> R loadSecurable(Connection conn, SecurableRowFactory<R> factory) throws Exception;	
 	
-	<R extends ActionRow> R loadActionByMyActionsGuid(Connection conn, ActionRowFactory<R> factory) throws Exception;	
+	<R extends ActionRow> R loadAction(Connection conn, ActionRowFactory<R> factory) throws Exception;	
 		
 
 }

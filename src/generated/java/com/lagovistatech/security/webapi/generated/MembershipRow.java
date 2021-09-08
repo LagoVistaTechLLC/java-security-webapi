@@ -39,10 +39,6 @@ public interface MembershipRow extends Row, Versioned {
 	java.util.UUID getGroupsGuid();
 	void setGroupsGuid(java.util.UUID value);
 	
-	static final String INCLUDED = "Included";
-	java.lang.Boolean getIncluded();
-	void setIncluded(java.lang.Boolean value);
-	
 	static final String GUID = "GUID";
 	java.util.UUID getGuid();
 	void setGuid(java.util.UUID value);
@@ -57,9 +53,9 @@ public interface MembershipRow extends Row, Versioned {
 
 	/* PARENTS */
 	
-	<R extends UserRow> R loadUserByMyUsersGuid(Connection conn, UserRowFactory<R> factory) throws Exception;	
+	<R extends UserRow> R loadUser(Connection conn, UserRowFactory<R> factory) throws Exception;	
 	
-	<R extends GroupRow> R loadGroupByMyGroupsGuid(Connection conn, GroupRowFactory<R> factory) throws Exception;	
+	<R extends GroupRow> R loadGroup(Connection conn, GroupRowFactory<R> factory) throws Exception;	
 		
 
 }

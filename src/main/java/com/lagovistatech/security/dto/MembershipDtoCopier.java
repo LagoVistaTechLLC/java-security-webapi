@@ -26,9 +26,7 @@ public class MembershipDtoCopier {
 		destination.setVersion(source.getVersion());
 		
 		destination.setGroupsGuid(source.getGroupsGuid());
-		
-		destination.setIncluded(source.getIncluded());
-		
+				
 		destination.setGuid(source.getGuid());
 		
 		destination.setUsersGuid(source.getUsersGuid());
@@ -39,8 +37,6 @@ public class MembershipDtoCopier {
 		destination.setVersion(source.getVersion());
 		
 		destination.setGroupsGuid(source.getGroupsGuid());
-		
-		destination.setIncluded(source.getIncluded());
 		
 		destination.setGuid(source.getGuid());
 		

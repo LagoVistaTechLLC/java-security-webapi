@@ -63,7 +63,7 @@ public class SecurableActionRowImp extends VersionedRow implements SecurableActi
 		
 	/* CHILDREN */
 	
-	public <R extends PermissionRow> Table<R> loadPermissionsBySecurableActionsGuidEqualsMyGuid(Connection conn, PermissionRowFactory<R> factory) throws Exception {
+	public <R extends PermissionRow> Table<R> loadPermissions(Connection conn, PermissionRowFactory<R> factory) throws Exception {
 		String sql = 
 			"SELECT * " + 
 			"FROM " + conn.getAdapter().quoteIdentifier("Permissions") + " " + 
@@ -78,7 +78,7 @@ public class SecurableActionRowImp extends VersionedRow implements SecurableActi
 		
 	/* PARENTS */
 	
-	public <R extends SecurableRow> R loadSecurableByMySecurablesGuid(Connection conn, SecurableRowFactory<R> factory) throws Exception {
+	public <R extends SecurableRow> R loadSecurable(Connection conn, SecurableRowFactory<R> factory) throws Exception {
 		String sql = 
 			"SELECT * " + 
 			"FROM " + conn.getAdapter().quoteIdentifier("Securables") + " " + 
@@ -94,7 +94,7 @@ public class SecurableActionRowImp extends VersionedRow implements SecurableActi
 		return table.get(0);
 	}
 	
-	public <R extends ActionRow> R loadActionByMyActionsGuid(Connection conn, ActionRowFactory<R> factory) throws Exception {
+	public <R extends ActionRow> R loadAction(Connection conn, ActionRowFactory<R> factory) throws Exception {
 		String sql = 
 			"SELECT * " + 
 			"FROM " + conn.getAdapter().quoteIdentifier("Actions") + " " + 

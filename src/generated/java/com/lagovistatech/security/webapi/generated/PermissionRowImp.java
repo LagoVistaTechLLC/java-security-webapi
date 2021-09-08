@@ -66,7 +66,7 @@ public class PermissionRowImp extends VersionedRow implements PermissionRow {
 		
 	/* PARENTS */
 	
-	public <R extends SecurableActionRow> R loadSecurableActionByMySecurableActionsGuid(Connection conn, SecurableActionRowFactory<R> factory) throws Exception {
+	public <R extends SecurableActionRow> R loadSecurableAction(Connection conn, SecurableActionRowFactory<R> factory) throws Exception {
 		String sql = 
 			"SELECT * " + 
 			"FROM " + conn.getAdapter().quoteIdentifier("Securable Actions") + " " + 
@@ -82,7 +82,7 @@ public class PermissionRowImp extends VersionedRow implements PermissionRow {
 		return table.get(0);
 	}
 	
-	public <R extends GroupRow> R loadGroupByMyGroupsGuid(Connection conn, GroupRowFactory<R> factory) throws Exception {
+	public <R extends GroupRow> R loadGroup(Connection conn, GroupRowFactory<R> factory) throws Exception {
 		String sql = 
 			"SELECT * " + 
 			"FROM " + conn.getAdapter().quoteIdentifier("Groups") + " " + 

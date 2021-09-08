@@ -48,12 +48,6 @@ public class MembershipRowImp extends VersionedRow implements MembershipRow {
 	}
 	public void setGroupsGuid(java.util.UUID value) { this.set(GROUPS_GUID, value); }
 	
-	public java.lang.Boolean getIncluded() {
-		Object ret = this.get(INCLUDED);
-		return ret == null ? null : (java.lang.Boolean) ret;		
-	}
-	public void setIncluded(java.lang.Boolean value) { this.set(INCLUDED, value); }
-	
 	public java.util.UUID getGuid() {
 		Object ret = this.get(GUID);
 		return ret == null ? null : (java.util.UUID) ret;		
@@ -72,7 +66,7 @@ public class MembershipRowImp extends VersionedRow implements MembershipRow {
 		
 	/* PARENTS */
 	
-	public <R extends UserRow> R loadUserByMyUsersGuid(Connection conn, UserRowFactory<R> factory) throws Exception {
+	public <R extends UserRow> R loadUser(Connection conn, UserRowFactory<R> factory) throws Exception {
 		String sql = 
 			"SELECT * " + 
 			"FROM " + conn.getAdapter().quoteIdentifier("Users") + " " + 
@@ -88,7 +82,7 @@ public class MembershipRowImp extends VersionedRow implements MembershipRow {
 		return table.get(0);
 	}
 	
-	public <R extends GroupRow> R loadGroupByMyGroupsGuid(Connection conn, GroupRowFactory<R> factory) throws Exception {
+	public <R extends GroupRow> R loadGroup(Connection conn, GroupRowFactory<R> factory) throws Exception {
 		String sql = 
 			"SELECT * " + 
 			"FROM " + conn.getAdapter().quoteIdentifier("Groups") + " " + 

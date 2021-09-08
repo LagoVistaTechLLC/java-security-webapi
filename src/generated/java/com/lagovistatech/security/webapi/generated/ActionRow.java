@@ -50,7 +50,7 @@ public interface ActionRow extends Row, Versioned {
 	
 	/* CHILDREN */
 	
-	<R extends SecurableActionRow> Table<R> loadSecurableActionsByActionsGuidEqualsMyGuid(Connection conn, SecurableActionRowFactory<R> factory) throws Exception;	
+	<R extends SecurableActionRow> Table<R> loadAllowedSecurables(Connection conn, SecurableActionRowFactory<R> factory) throws Exception;	
 		
 
 	/* PARENTS */

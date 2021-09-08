@@ -100,6 +100,7 @@ public class UserImp extends UserRowImp implements User {
 		
 		Parameters params = new Parameters();
 		params.put("@UsersGuid", this.getGuid());
+		params.put("@EveryonesGuid", Group.EVERYONES_GUID);
 		
 		return connection.fill(factory, sql, params);
 	}

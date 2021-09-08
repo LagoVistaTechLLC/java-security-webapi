@@ -28,6 +28,10 @@ public class SettingDto  {
 	public java.lang.Boolean getServerSideOnly() { return myServerSideOnly; } 
 	public void setServerSideOnly(java.lang.Boolean value) { myServerSideOnly = value; }
 	
+	private java.util.UUID myGroupsGuid;
+	public java.util.UUID getGroupsGuid() { return myGroupsGuid; } 
+	public void setGroupsGuid(java.util.UUID value) { myGroupsGuid = value; }
+	
 	private java.util.UUID myGuid;
 	public java.util.UUID getGuid() { return myGuid; } 
 	public void setGuid(java.util.UUID value) { myGuid = value; }

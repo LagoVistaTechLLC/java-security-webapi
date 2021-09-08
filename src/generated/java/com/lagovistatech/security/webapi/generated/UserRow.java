@@ -78,7 +78,9 @@ public interface UserRow extends Row, Versioned {
 	
 	/* CHILDREN */
 	
-	<R extends MembershipRow> Table<R> loadMembershipsByUsersGuidEqualsMyGuid(Connection conn, MembershipRowFactory<R> factory) throws Exception;	
+	<R extends MembershipRow> Table<R> loadMemberships(Connection conn, MembershipRowFactory<R> factory) throws Exception;	
+	
+	<R extends SettingRow> Table<R> loadSettings(Connection conn, SettingRowFactory<R> factory) throws Exception;	
 		
 
 	/* PARENTS */

@@ -28,43 +28,34 @@ public class SessionImp implements Session {
 	private Map<UUID, Set<UUID>> allowedSecurableActions;
 	private Map<String, Setting> settingsByKey;
 
-	@Override
 	public Connection getConnection() { return connection; }
-	@Override
 	public User getUser() { return user; }
-	@Override
 	public Group getGroup(UUID groupsGuid) throws RecordNotFoundException {
 		if(groupsByGuid != null && groupsByGuid.containsKey(groupsGuid))
 			return groupsByGuid.get(groupsGuid);
 		
 		throw new RecordNotFoundException("Could not locate group by GUID '" + groupsGuid.toString() + "'!");
 	}
-	@Override
 	public Action getAction(UUID actionsGuid) throws RecordNotFoundException {
 		if(actionsByGuid != null && actionsByGuid.containsKey(actionsGuid))
 			return actionsByGuid.get(actionsGuid);
 		
 		throw new RecordNotFoundException("Could not locate action by GUID '" + actionsGuid.toString() + "'!");
 	}
-	@Override
 	public Securable getSecurable(UUID securablesGuid) throws RecordNotFoundException {
 		if(securablesByGuid != null && securablesByGuid.containsKey(securablesGuid))
 			return securablesByGuid.get(securablesGuid);
 		
 		throw new RecordNotFoundException("Could not locate securable by GUID '" + securablesGuid.toString() + "'!");
 	}
-	@Override
 	public Setting getSetting(String key) { return settingsByKey.get(key); }
-	@Override
 	public long getSecondsTillExpiration() {
 		long timeoutInSeconds = Long.parseLong(settingsByKey.get(SETTING_SESSION_TIMEOUT_IN_SECONDS).getValue()) * 1000;
 		long sessionDurationInMs = Instant.now().toEpochMilli() - created.toInstant().toEpochMilli();
 		return (timeoutInSeconds - sessionDurationInMs) / 1000;
 	}
 
-	@Override
 	public boolean isMemberOfGroup(UUID groupsGuid) { return groupMemberships.contains(groupsGuid); }	
-	@Override
 	public boolean isAdministration() {
 		if(this.user.getGuid().equals(User.ADMINISTRATORS_GUID))
 			return true;
@@ -73,7 +64,6 @@ public class SessionImp implements Session {
 
 		return false;
 	}
-	@Override
 	public boolean isAllowed(UUID securablesGuid, UUID actionsGuid) {
 		if(isAdministration())
 			return true;
@@ -83,21 +73,18 @@ public class SessionImp implements Session {
 	
 		return false;
 	}
-	@Override
 	public boolean isPasswordExpired() {
 		int maxDays = Integer.parseInt(this.getSetting(User.SETTING_MAXIMUM_PASSWORD_AGE_IN_DAYS).getValue());
 		Calendar minPasswordDate = Calendar.getInstance();
 		minPasswordDate.add(Calendar.DATE, maxDays * -1);
 		return user.getPasswordDate().before(minPasswordDate.getTime());
 	}	
-	@Override
 	public boolean isExpired() {
 		long timeoutInSeconds = Long.parseLong(settingsByKey.get(SETTING_SESSION_TIMEOUT_IN_SECONDS).getValue()) * 1000;
 		long sessionDurationInMs = Instant.now().toEpochMilli() - created.toInstant().toEpochMilli();
 		return sessionDurationInMs > timeoutInSeconds;
 	}
 
-	@Override
 	public void login(Connection connection, String userName, String password) throws Exception {
 		if(userName == null || userName.length() < 1)
 			throw new InvalidLoginException("No user name provided!");
@@ -112,6 +99,7 @@ public class SessionImp implements Session {
 		if(!user.validatePassword(password))
 			throw new InvalidLoginException(AUTHENTICATION_FAILED);
 		
+		loadSettings();
 		loadGroups();
 		loadActions();
 		loadSecurables();
@@ -119,6 +107,17 @@ public class SessionImp implements Session {
 		loadSecurableActions();
 		
 		created = Timestamp.from(java.time.Instant.now());
+	}
+	private void loadSettings() throws Exception {
+		settingsByKey = new HashMap<>();
+		
+		Table<Setting> settings = SettingFactory.instance.loadAll(connection);
+		for(Setting setting : settings)
+			settingsByKey.put(setting.getKey(), setting);
+		
+		settings = getUser().loadSettings(connection, SettingFactory.instance);
+		for(Setting setting : settings)
+			settingsByKey.put(setting.getKey(), setting);
 	}
 	private void loadSecurableActions() throws Exception {
 		allowedSecurableActions = new HashMap<>();
@@ -134,7 +133,7 @@ public class SessionImp implements Session {
 	private void loadMemberships() throws Exception {
 		groupMemberships = new HashSet<>();
 		
-		Table<Membership> memberships = getUser().loadMembershipsByUsersGuidEqualsMyGuid(connection, MembershipFactory.instance);
+		Table<Membership> memberships = getUser().loadMemberships(connection, MembershipFactory.instance);
 		for(Membership membership : memberships) 
 			groupMemberships.add(membership.getGroupsGuid());
 		

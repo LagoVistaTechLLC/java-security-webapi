@@ -65,13 +65,11 @@ CREATE TABLE "Memberships" (
 	"Version" BIGINT NOT NULL,
 
 	"Users GUID" UUID NOT NULL,
-	"Groups GUID" UUID NOT NULL,
-	
-	"Included" BOOLEAN
+	"Groups GUID" UUID NOT NULL
 );
 
 ALTER TABLE "Memberships" ADD CONSTRAINT "Memberships > User" FOREIGN KEY ("Users GUID") REFERENCES "Users" ("GUID");
-ALTER TABLE "Memberships" ADD CONSTRAINT "Memberships > Groups" FOREIGN KEY ("Groups GUID") REFERENCES "Groups" ("GUID");
+ALTER TABLE "Memberships" ADD CONSTRAINT "Memberships > Group" FOREIGN KEY ("Groups GUID") REFERENCES "Groups" ("GUID");
 ALTER TABLE "Memberships" ADD CONSTRAINT "Membership Unique User and Group" UNIQUE ("Users GUID", "Groups GUID");
 
 INSERT INTO "Memberships" ("GUID", "Version", "Users GUID", "Groups GUID")
@@ -127,12 +125,16 @@ CREATE TABLE "Settings" (
 	"Version" BIGINT NOT NULL,
 	
 	"Users GUID" UUID,
+	"Groups GUID" UUID,
 	
 	"Key" VARCHAR(128) NOT NULL UNIQUE,
 	"Value" VARCHAR(1024) NOT NULL,
 	
 	"Server Side Only" BOOLEAN NOT NULL
 );
+ALTER TABLE "Settings" ADD CONSTRAINT "Settings > User" FOREIGN KEY ("Users GUID") REFERENCES "Users" ("GUID");
+ALTER TABLE "Settings" ADD CONSTRAINT "Settings > Group" FOREIGN KEY ("Groups GUID") REFERENCES "Groups" ("GUID");
+
 INSERT INTO "Settings" ("GUID", "Version", "Users GUID", "Key", "Value", "Server Side Only")
 VALUES ('617f24ef2e504836b2c249a90001d17c', 1, NULL, 'Minimum Password Length', '8', FALSE);
 INSERT INTO "Settings" ("GUID", "Version", "Users GUID", "Key", "Value", "Server Side Only")

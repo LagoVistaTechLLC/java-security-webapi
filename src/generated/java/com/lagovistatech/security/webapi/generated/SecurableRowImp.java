@@ -63,7 +63,7 @@ public class SecurableRowImp extends VersionedRow implements SecurableRow {
 		
 	/* CHILDREN */
 	
-	public <R extends SecurableActionRow> Table<R> loadSecurableActionsBySecurablesGuidEqualsMyGuid(Connection conn, SecurableActionRowFactory<R> factory) throws Exception {
+	public <R extends SecurableActionRow> Table<R> loadAllowedActions(Connection conn, SecurableActionRowFactory<R> factory) throws Exception {
 		String sql = 
 			"SELECT * " + 
 			"FROM " + conn.getAdapter().quoteIdentifier("Securable Actions") + " " + 

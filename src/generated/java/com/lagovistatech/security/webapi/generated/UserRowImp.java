@@ -105,10 +105,22 @@ public class UserRowImp extends VersionedRow implements UserRow {
 		
 	/* CHILDREN */
 	
-	public <R extends MembershipRow> Table<R> loadMembershipsByUsersGuidEqualsMyGuid(Connection conn, MembershipRowFactory<R> factory) throws Exception {
+	public <R extends MembershipRow> Table<R> loadMemberships(Connection conn, MembershipRowFactory<R> factory) throws Exception {
 		String sql = 
 			"SELECT * " + 
 			"FROM " + conn.getAdapter().quoteIdentifier("Memberships") + " " + 
+			"WHERE " + conn.getAdapter().quoteIdentifier("Users GUID") + "=@Value";
+		
+		Parameters params = new Parameters();
+		params.put("@Value", this.getGuid());
+		
+		return conn.fill(factory, sql, params);
+	}
+	
+	public <R extends SettingRow> Table<R> loadSettings(Connection conn, SettingRowFactory<R> factory) throws Exception {
+		String sql = 
+			"SELECT * " + 
+			"FROM " + conn.getAdapter().quoteIdentifier("Settings") + " " + 
 			"WHERE " + conn.getAdapter().quoteIdentifier("Users GUID") + "=@Value";
 		
 		Parameters params = new Parameters();

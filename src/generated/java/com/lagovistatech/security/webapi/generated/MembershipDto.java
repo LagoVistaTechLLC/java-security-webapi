@@ -28,10 +28,6 @@ public class MembershipDto  {
 	public java.util.UUID getGroupsGuid() { return myGroupsGuid; } 
 	public void setGroupsGuid(java.util.UUID value) { myGroupsGuid = value; }
 	
-	private java.lang.Boolean myIncluded;
-	public java.lang.Boolean getIncluded() { return myIncluded; } 
-	public void setIncluded(java.lang.Boolean value) { myIncluded = value; }
-	
 	private java.util.UUID myGuid;
 	public java.util.UUID getGuid() { return myGuid; } 
 	public void setGuid(java.util.UUID value) { myGuid = value; }
