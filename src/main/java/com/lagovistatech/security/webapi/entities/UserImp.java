@@ -73,11 +73,11 @@ public class UserImp extends UserRowImp implements User {
 		if(newPassword.length() < 1)
 			throw new Exception("You must provide a new password!");
 
-		int minLength = Integer.parseInt(session.getSetting(User.SETTING_MINIMUM_PASSWORD_LENGTH).getValue());
+		int minLength = Integer.parseInt(session.getSettingsByKey().get(User.SETTING_MINIMUM_PASSWORD_LENGTH).getValue());
 		if(newPassword.length() < minLength)
 			throw new Exception("The password does not meet the length requirements of at least " + minLength + " charaters long!");
 		
-		int minComplexity = Integer.parseInt(session.getSetting(User.SETTING_MINIMUM_PASSWORD_COMPLEXITY).getValue());
+		int minComplexity = Integer.parseInt(session.getSettingsByKey().get(User.SETTING_MINIMUM_PASSWORD_COMPLEXITY).getValue());
 		if(PasswordHasher.calculateComplexity(newPassword) < minComplexity)
 			throw new Exception("The password does not meet complexity requirements of at least " + minComplexity + " charater catagories (lower case, upper case, numbers, and symbols)!");
 

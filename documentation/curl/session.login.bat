@@ -1,0 +1,1 @@
+curl -H "Content-Type: application/json" -d "{ ""userName"": ""administrator"", ""password"": ""Welcome123"" }" -v http://localhost:8080/api/v1/session/login

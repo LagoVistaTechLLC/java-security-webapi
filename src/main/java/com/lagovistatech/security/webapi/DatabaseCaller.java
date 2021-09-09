@@ -1,14 +1,20 @@
 package com.lagovistatech.security.webapi;
 
+import java.util.UUID;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.lagovistatech.database.Connection;
 import com.lagovistatech.database.ConnectionFactory;
+import com.lagovistatech.logging.Logger;
+import com.lagovistatech.logging.Logger.LogType;
 
 @ConfigurationProperties(prefix = "database")
 public class DatabaseCaller<T> {
+	private static final Logger logger = new Logger("c.lvt.s.w.DatabaseCaller");
+	
 	public interface Callable<T> {
 		ResponseEntity<T> run(Connection connection) throws Exception;
 	}
@@ -37,12 +43,12 @@ public class DatabaseCaller<T> {
 	public String getTimeout() { return timeout; }
 	public void setTimeout(String timeout) { this.timeout = timeout; }
 
-	public static <T> ResponseEntity<T> run(Callable<T> callable) {
+	public static <T> ResponseEntity<T> run(UUID corelation, Callable<T> callable) {
 		DatabaseCaller<T> instance = new DatabaseCaller<T>();
-		return instance.execute(callable);
+		return instance.execute(corelation, callable);
 	}
 	
-	private ResponseEntity<T> execute(Callable<T> callable) {
+	private ResponseEntity<T> execute(UUID corelation, Callable<T> callable) {
 		Connection connection = ConnectionFactory.instance.create();
 		connection.setDatabase(name);
 		connection.setServer(server);
@@ -56,11 +62,14 @@ public class DatabaseCaller<T> {
 			return callable.run(connection);
 		}
 		catch(Exception ex) {
+			logger.write(LogType.ERROR, corelation, ex.toString());
 			return new ResponseEntity<T>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		finally { 
 			try { connection.close(); }
-			catch(Exception ex) { /* ignore */ }
+			catch(Exception ex) {
+				logger.write(LogType.ERROR, corelation, ex.toString());
+			}
 		}			
 	}
 }

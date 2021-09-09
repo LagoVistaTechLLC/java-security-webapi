@@ -12,6 +12,7 @@ import java.util.UUID;
 import com.lagovistatech.database.Connection;
 import com.lagovistatech.database.RecordNotFoundException;
 import com.lagovistatech.database.Table;
+import com.lagovistatech.security.dto.SessionDto;
 
 public class SessionImp implements Session {
 	private static final String AUTHENTICATION_FAILED = "Login failed!";
@@ -19,40 +20,75 @@ public class SessionImp implements Session {
 	protected SessionImp() {}
 
 	private Connection connection;
-	private Timestamp created;
-	private User user;
-	private Map<UUID, Group> groupsByGuid;
-	private Set<UUID> groupMemberships;
-	private Map<UUID, Action> actionsByGuid;
-	private Map<UUID, Securable> securablesByGuid;
-	private Map<UUID, Set<UUID>> allowedSecurableActions;
-	private Map<String, Setting> settingsByKey;
+	public Connection getConnection() {
+		return connection;
+	}
+	public void setConnection(Connection connection) {
+		this.connection = connection;
+	}
 
-	public Connection getConnection() { return connection; }
-	public User getUser() { return user; }
-	public Group getGroup(UUID groupsGuid) throws RecordNotFoundException {
-		if(groupsByGuid != null && groupsByGuid.containsKey(groupsGuid))
-			return groupsByGuid.get(groupsGuid);
-		
-		throw new RecordNotFoundException("Could not locate group by GUID '" + groupsGuid.toString() + "'!");
+	private User user;
+	public User getUser() {
+		return user;
 	}
-	public Action getAction(UUID actionsGuid) throws RecordNotFoundException {
-		if(actionsByGuid != null && actionsByGuid.containsKey(actionsGuid))
-			return actionsByGuid.get(actionsGuid);
-		
-		throw new RecordNotFoundException("Could not locate action by GUID '" + actionsGuid.toString() + "'!");
+	public void setUser(User user) {
+		this.user = user;
 	}
-	public Securable getSecurable(UUID securablesGuid) throws RecordNotFoundException {
-		if(securablesByGuid != null && securablesByGuid.containsKey(securablesGuid))
-			return securablesByGuid.get(securablesGuid);
-		
-		throw new RecordNotFoundException("Could not locate securable by GUID '" + securablesGuid.toString() + "'!");
+
+	private Timestamp created;
+	public Timestamp getCreated() {
+		return created;
 	}
-	public Setting getSetting(String key) { return settingsByKey.get(key); }
-	public long getSecondsTillExpiration() {
-		long timeoutInSeconds = Long.parseLong(settingsByKey.get(SETTING_SESSION_TIMEOUT_IN_SECONDS).getValue()) * 1000;
-		long sessionDurationInMs = Instant.now().toEpochMilli() - created.toInstant().toEpochMilli();
-		return (timeoutInSeconds - sessionDurationInMs) / 1000;
+	public void setCreated(Timestamp created) {
+		this.created = created;
+	}
+
+	private Map<UUID, Group> groupsByGuid;
+	public Map<UUID, Group> getGroupsByGuid() {
+		return groupsByGuid;
+	}
+	public void setGroupsByGuid(Map<UUID, Group> groupsByGuid) {
+		this.groupsByGuid = groupsByGuid;
+	}
+
+	private Set<UUID> groupMemberships;
+	public Set<UUID> getGroupMemberships() {
+		return groupMemberships;
+	}
+	public void setGroupMemberships(Set<UUID> groupMemberships) {
+		this.groupMemberships = groupMemberships;
+	}
+
+	private Map<UUID, Action> actionsByGuid;
+	public Map<UUID, Action> getActionsByGuid() {
+		return actionsByGuid;
+	}
+	public void setActionsByGuid(Map<UUID, Action> actionsByGuid) {
+		this.actionsByGuid = actionsByGuid;
+	}
+	
+	private Map<UUID, Securable> securablesByGuid;
+	public Map<UUID, Securable> getSecurablesByGuid() {
+		return securablesByGuid;
+	}
+	public void setSecurablesByGuid(Map<UUID, Securable> securablesByGuid) {
+		this.securablesByGuid = securablesByGuid;
+	}
+
+	private Map<UUID, Set<UUID>> allowedSecurableActions;
+	public Map<UUID, Set<UUID>> getAllowedSecurableActions() {
+		return allowedSecurableActions;
+	}
+	public void setAllowedSecurableActions(Map<UUID, Set<UUID>> allowedSecurableActions) {
+		this.allowedSecurableActions = allowedSecurableActions;
+	}
+
+	private Map<String, Setting> settingsByKey;
+	public Map<String, Setting> getSettingsByKey() {
+		return settingsByKey;
+	}
+	public void setSettingsByKey(Map<String, Setting> settingsByKey) {
+		this.settingsByKey = settingsByKey;
 	}
 
 	public boolean isMemberOfGroup(UUID groupsGuid) { return groupMemberships.contains(groupsGuid); }	
@@ -74,13 +110,13 @@ public class SessionImp implements Session {
 		return false;
 	}
 	public boolean isPasswordExpired() {
-		int maxDays = Integer.parseInt(this.getSetting(User.SETTING_MAXIMUM_PASSWORD_AGE_IN_DAYS).getValue());
+		int maxDays = Integer.parseInt(getSettingsByKey().get(User.SETTING_MAXIMUM_PASSWORD_AGE_IN_DAYS).getValue());
 		Calendar minPasswordDate = Calendar.getInstance();
 		minPasswordDate.add(Calendar.DATE, maxDays * -1);
 		return user.getPasswordDate().before(minPasswordDate.getTime());
 	}	
 	public boolean isExpired() {
-		long timeoutInSeconds = Long.parseLong(settingsByKey.get(SETTING_SESSION_TIMEOUT_IN_SECONDS).getValue()) * 1000;
+		long timeoutInSeconds = Long.parseLong(getSettingsByKey().get(SETTING_SESSION_TIMEOUT_IN_SECONDS).getValue()) * 1000;
 		long sessionDurationInMs = Instant.now().toEpochMilli() - created.toInstant().toEpochMilli();
 		return sessionDurationInMs > timeoutInSeconds;
 	}
@@ -165,5 +201,11 @@ public class SessionImp implements Session {
 		catch(RecordNotFoundException ex) {
 			throw new InvalidLoginException(AUTHENTICATION_FAILED);
 		}
-	}	
+	}
+	
+	public SessionDto createDto() {
+		SessionDto ret = new SessionDto();
+		ret.copyFrom(this);
+		return ret;
+	}
 }
