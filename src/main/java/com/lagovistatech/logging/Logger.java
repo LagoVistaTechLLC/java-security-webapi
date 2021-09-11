@@ -17,9 +17,15 @@ public class Logger {
 	
 	public Logger(String name) { logger = LoggerFactory.getLogger(name); }
 	
-	public UUID write(LogType logType, UUID corelation, String message) {
-		String output = "{ \"corelation\":\"" + corelation.toString() + "\", \"message\":\"" + message.replace("\"", "\\\"") + "\" }";
-		
+	public UUID write(LogType logType, UUID correlation, String function, String message) {
+		String output = "{ \"correlation\":\"" + correlation.toString() + "\", \"function\":\"" + function.replace("\"", "\\\"") + "\", \"message\":\"" + message.replace("\"", "\\\"") + "\" }";
+		return rawWrite(logType, correlation, output);
+	}
+	public UUID write(LogType logType, UUID correlation, String message) {
+		String output = "{ \"correlation\":\"" + correlation.toString() + "\", \"message\":\"" + message.replace("\"", "\\\"") + "\" }";
+		return rawWrite(logType, correlation, output);
+	}
+	private UUID rawWrite(LogType logType, UUID correlation, String output) {
 		switch(logType) {
 			case WARN:
 				logger.warn(output); 
@@ -38,6 +44,6 @@ public class Logger {
 				logger.info(output);
 		}
 		
-		return corelation;
+		return correlation;
 	}
 }

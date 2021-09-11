@@ -1,4 +1,4 @@
-package com.lagovistatech.security.webapi.test;
+package com.lagovistatech.security.webapi.entities.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import com.lagovistatech.database.Connection;
 import com.lagovistatech.database.Table;
 import com.lagovistatech.database.TableFactory;
+import com.lagovistatech.security.test.TestDatabase;
 import com.lagovistatech.security.webapi.entities.AccessDeniedException;
 import com.lagovistatech.security.webapi.entities.Group;
 import com.lagovistatech.security.webapi.entities.InvalidLoginException;

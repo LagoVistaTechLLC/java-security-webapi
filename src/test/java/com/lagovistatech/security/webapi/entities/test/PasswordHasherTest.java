@@ -1,4 +1,4 @@
-package com.lagovistatech.security.webapi.test;
+package com.lagovistatech.security.webapi.entities.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 

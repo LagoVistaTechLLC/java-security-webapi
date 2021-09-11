@@ -23,17 +23,17 @@ public class SessionController {
 
 	@PostMapping("/api/v1/session/login")
 	public ResponseEntity<SessionDto> login(@RequestBody CredentialsDto credentials) {
-		UUID corelation = logger.write(LogType.INFO, UUID.randomUUID(),  "/api/v1/session/login");
-		return DatabaseCaller.run(corelation, (Callable<SessionDto>) (connection) -> {
+		UUID correlation = logger.write(LogType.INFO, UUID.randomUUID(),  "/api/v1/session/login");
+		return DatabaseCaller.run(correlation, (Callable<SessionDto>) (connection) -> {
 			try { 
 				Session session = SessionFactory.instance.create();
 				session.login(connection, credentials.getUserName(), credentials.getPassword());
-				logger.write(LogType.INFO, corelation, "Login: " + credentials.getUserName());
+				logger.write(LogType.INFO, correlation, "Login: " + credentials.getUserName());
 				
 				return new ResponseEntity<>(session.createDto(), null, HttpStatus.OK);
 			}
 			catch(InvalidLoginException ex) {
-				logger.write(LogType.ERROR, corelation, ex.toString());
+				logger.write(LogType.ERROR, correlation, ex.toString());
 				return new ResponseEntity<>(null, null, HttpStatus.UNAUTHORIZED);
 			}
 		});

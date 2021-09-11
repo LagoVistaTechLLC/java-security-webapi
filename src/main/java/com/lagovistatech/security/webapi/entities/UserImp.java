@@ -15,6 +15,7 @@ import com.lagovistatech.security.webapi.generated.SecurableActionRowFactory;
 import com.lagovistatech.security.webapi.generated.UserRowImp;
 
 public class UserImp extends UserRowImp implements User {	
+
 	private PasswordHasher hasher;
 	protected UserImp(HashMap<String, Object> values, PasswordHasher hasher) {
 		super(values);
@@ -53,6 +54,7 @@ public class UserImp extends UserRowImp implements User {
 			return false;
 		
 		hasher.setSalt(this.getPasswordSalt());
+		hasher.setIterations(getPasswordIterations());
 		byte[] potential = hasher.calculate(password);
 		byte[] actual = this.getPasswordHash();
 		

@@ -44,7 +44,7 @@ public class DatabaseCaller<T> {
 	public void setTimeout(String timeout) { this.timeout = timeout; }
 
 	public static <T> ResponseEntity<T> run(UUID corelation, Callable<T> callable) {
-		DatabaseCaller<T> instance = new DatabaseCaller<T>();
+		DatabaseCaller<T> instance = new DatabaseCaller<>();
 		return instance.execute(corelation, callable);
 	}
 	
@@ -63,7 +63,7 @@ public class DatabaseCaller<T> {
 		}
 		catch(Exception ex) {
 			logger.write(LogType.ERROR, corelation, ex.toString());
-			return new ResponseEntity<T>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		finally { 
 			try { connection.close(); }
