@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 
 import com.lagovistatech.database.Connection;
 import com.lagovistatech.database.ConnectionFactory;
-import com.lagovistatech.logging.Logger;
-import com.lagovistatech.logging.Logger.LogType;
+import com.lagovistatech.Logger;
+import com.lagovistatech.Logger.LogType;
 
 @ConfigurationProperties(prefix = "database")
 public class DatabaseCaller<T> {

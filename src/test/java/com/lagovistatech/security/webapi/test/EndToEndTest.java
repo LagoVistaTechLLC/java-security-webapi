@@ -90,7 +90,7 @@ class EndToEndTest {
 	}
 	@Test
 	void JsonRequestTest_SessionLogin_200() throws Exception {
-		JsonRequest<SessionDto> req = new JsonRequest<>(SessionDto.class);
+		JsonRequest<CredentialsDto, SessionDto> req = new JsonRequest<>(SessionDto.class);
 		req.setUrl("http://localhost:8080/api/v1/session/login");
 		req.setMethod(Method.POST);
 		

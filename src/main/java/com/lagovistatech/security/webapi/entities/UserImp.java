@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import com.lagovistatech.Helpers;
+import com.lagovistatech.crypto.PasswordHasher;
 import com.lagovistatech.database.Connection;
 import com.lagovistatech.database.Parameters;
 import com.lagovistatech.database.Table;

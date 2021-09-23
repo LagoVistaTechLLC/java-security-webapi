@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lagovistatech.logging.Logger;
-import com.lagovistatech.logging.Logger.LogType;
+import com.lagovistatech.Logger;
+import com.lagovistatech.Logger.LogType;
 import com.lagovistatech.security.dto.CredentialsDto;
 import com.lagovistatech.security.dto.SessionDto;
 import com.lagovistatech.security.webapi.DatabaseCaller.Callable;

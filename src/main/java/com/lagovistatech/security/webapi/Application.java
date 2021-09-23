@@ -8,8 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-import com.lagovistatech.logging.Logger;
-import com.lagovistatech.logging.Logger.LogType;
+import com.lagovistatech.Logger;
+import com.lagovistatech.Logger.LogType;
 
 @SpringBootApplication
 public class Application {
