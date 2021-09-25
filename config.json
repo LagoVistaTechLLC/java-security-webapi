@@ -1,0 +1,9 @@
+{
+	"databaseServer": "localhost",
+	"databaseName": "postgres",
+	"databaseUser": "postgres",
+	"databasePassword": "postgres",
+	"databasePort": 54321,
+	"databaseTimeout": 120,
+	"httpPort": 8080
+}

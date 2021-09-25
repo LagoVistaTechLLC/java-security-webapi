@@ -1,5 +1,6 @@
 package com.lagovistatech.security.webapi;
 
+import java.nio.file.Paths;
 import java.util.UUID;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -19,27 +20,27 @@ public class DatabaseCaller<T> {
 		ResponseEntity<T> run(Connection connection) throws Exception;
 	}
 	
-	private String server = "localhost";
+	private String server = null;
 	public String getServer() { return server; }
 	public void setServer(String server) { this.server = server; }
 
-	private String user = "postgres";
+	private String user = null;
 	public String getUser() { return user; }
 	public void setUser(String user) { this.user = user; }
 
-	private String name = "postgres";
+	private String name = null;
 	public String getName() { return name; }
 	public void setName(String name) { this.name = name; }
 
-	private String password = "postgres";
+	private String password = null;
 	public String getPassword() { return password; }
 	public void setPassword(String password) { this.password = password; }
 
-	private String port = "54321";
+	private String port = null;
 	public String getPort() { return port; }
 	public void setPort(String port) { this.port = port; }
 
-	private String timeout = "120";
+	private String timeout = null;
 	public String getTimeout() { return timeout; }
 	public void setTimeout(String timeout) { this.timeout = timeout; }
 
@@ -48,16 +49,17 @@ public class DatabaseCaller<T> {
 		return instance.execute(corelation, callable);
 	}
 	
-	private ResponseEntity<T> execute(UUID corelation, Callable<T> callable) {
-		Connection connection = ConnectionFactory.instance.create();
-		connection.setDatabase(name);
-		connection.setServer(server);
-		connection.setUser(user);
-		connection.setPassword(password);
-		connection.setPort(Integer.parseInt(port));
-		connection.setTimeOut(Integer.parseInt(timeout));
-		
+	private ResponseEntity<T> execute(UUID corelation, Callable<T> callable) {		
+		Connection connection = null;
 		try {
+			connection = ConnectionFactory.instance.create();
+			connection.setDatabase(Config.load().getDatabaseName());
+			connection.setServer(Config.load().getDatabaseServer());
+			connection.setUser(Config.load().getDatabaseUser());
+			connection.setPassword(Config.load().getDatabasePassword());
+			connection.setPort(Config.load().getDatabasePort());
+			connection.setTimeOut(Config.load().getDatabaseTimeout());
+			
 			connection.open();
 			return callable.run(connection);
 		}
@@ -66,7 +68,10 @@ public class DatabaseCaller<T> {
 			return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		finally { 
-			try { connection.close(); }
+			try { 
+				if(connection != null)
+					connection.close(); 
+			}
 			catch(Exception ex) {
 				logger.write(LogType.ERROR, corelation, ex.toString());
 			}

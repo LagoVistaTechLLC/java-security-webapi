@@ -18,5 +18,5 @@ public class UserFactory extends UserRowFactoryImp<User> {
 	
 	private UserFactory() {}
 	public static final UserFactory instance = new UserFactory();
-	public User create() { return new UserImp(new HashMap<String, Object>(), HASHER); }
+	public User create() { return new UserImp(new HashMap<>(), HASHER); }
 }
