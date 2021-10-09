@@ -1,6 +1,5 @@
 package com.lagovistatech.security.webapi;
 
-import java.nio.file.Paths;
 import java.util.UUID;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;

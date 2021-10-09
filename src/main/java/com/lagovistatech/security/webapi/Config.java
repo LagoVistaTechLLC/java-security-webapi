@@ -2,7 +2,6 @@ package com.lagovistatech.security.webapi;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
