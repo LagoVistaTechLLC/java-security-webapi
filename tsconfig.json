@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"outDir": "./public/scripts/",
+		"noImplicitAny": true,
+		"module": "es6",
+		"target": "ES6",
+		"lib": [
+			"dom",
+			"ES6"
+		],
+		"jsx": "react",
+		"allowJs": true,
+		"sourceMap": true,
+		"noImplicitThis": true,
+		"strictNullChecks": true,
+		"moduleResolution": "node"
+	}
+}

@@ -16,9 +16,6 @@ public class Application {
 	private static final Logger logger = new Logger("c.lvt.s.w.Application");
 	
 	public static void main(String[] args) throws Exception {
-		Config config = Config.load();
-		System.setProperty("server.servlet.context-path", config.getPublicPath());
-		
 		SpringApplication.run(Application.class, args);
 	}
 	

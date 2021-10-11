@@ -17,10 +17,11 @@ class EndToEndTest {
 	static Thread website;
 	
 	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
+	static void setUpBeforeClass() throws Exception {	
 		website = new Thread() {
 			public void run() {
-				Application.main(new String[] {});
+				try { Application.main(new String[] {}); }
+				catch(Exception ex) { ex.printStackTrace(); }
 			}
 		};
 		website.start();

@@ -2,3 +2,6 @@ postgres/data
 .DS_Store
 target
 generator/generated
+node_modules
+/package-lock.json
+/public/scripts/**/*.js

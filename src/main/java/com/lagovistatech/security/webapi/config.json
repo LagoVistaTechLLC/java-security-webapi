@@ -6,5 +6,4 @@
 	"databasePort": 54321,
 	"databaseTimeout": 120,
 	"httpPort": 8080
-	"httpPublic": "
 }
