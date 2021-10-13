@@ -1,17 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+
+import { HttpHeader } from "./HttpHeader";
+
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export class RestClient {
 	public url: string;
-	public headers: { [key: string]: string };
-	public method: "GET" | "POST" | "PUT";
+	public headers: HttpHeader[] = [];
+	public method: "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "CONNECT" | "OPTIONS" | "TRACE";
 
 	public onloadend: ((this: XMLHttpRequest, ev: ProgressEvent) => any) | null = null;
 	public onloadstart: ((this: XMLHttpRequest, ev: ProgressEvent) => any) | null = null;
 	public onprogress: ((this: XMLHttpRequest, ev: ProgressEvent) => any) | null = null;
 	public onreadystatechange: ((this: XMLHttpRequest, ev: ProgressEvent) => any) | null = null;
 
-	public send(body?: Document | XMLHttpRequestBodyInit | null): Promise<XMLHttpRequest> {
+	public send(body?: any): Promise<XMLHttpRequest> {
 		return new Promise<any>((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
 			const success = (ev: ProgressEvent) => { resolve(xhr); };
@@ -27,12 +30,14 @@ export class RestClient {
 			xhr.onprogress = this.onprogress;
 			xhr.onreadystatechange = this.onreadystatechange;
 			
-			Object.keys(this.headers).forEach((value: string) => {
-				xhr.setRequestHeader(value, this.headers[value]);
-			});
-
 			xhr.open(this.method, this.url);
-			xhr.send(body);
+			this.headers.forEach((header: HttpHeader) => {
+				xhr.setRequestHeader(header.name, header.value);
+			});
+			if(body)
+				xhr.send(JSON.stringify(body));
+			else
+				xhr.send();
 		});
 	}
 }
